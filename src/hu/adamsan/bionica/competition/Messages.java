@@ -1,7 +1,11 @@
 package hu.adamsan.bionica.competition;
 
+import java.util.ResourceBundle;
+
 public class Messages {
 
+
+    public static final ResourceBundle bundle = ResourceBundle.getBundle("messages");
 
     public static final String START_HEADER_MESSAGE = "" +
             "  ____  _       _    _                        _  __      ___                                       _                    \r\n" +
@@ -13,13 +17,12 @@ public class Messages {
             "                                                                                                      __/ |             \r\n" +
             "                                                                                                     |___/              \r\n" +
             "";
-    public static final String VERSION_INFO = "1.0.0 verzió";
-    public static final String REQUEST_TEAM_INFO = "Add meg a csapat nevét:";
-    public static final String CONFIRM_TEAM_NAME = "A csapat neve: \"%s\"?";
-    public static final String CONFIRM_ANSWER = "Válaszod a(z) %d. kérdésre: \"%s\"?";
-    public static final String QUESTIONS_START = "Válaszolj az alábbi kérdésekre, a válasz megadása után nyomj ENTERT.";
-
-    public static final String ENDING_MESSAGE = "\nKöszönjük a munkátokat!\nAz eredményeitek segíthetnek, hogy legyőzzük a halálos vírust!";
-    public static final String LINE = "---------------------------------------------------------------------------------------------";
+    public static final String VERSION_INFO = bundle.getString("version");
+    public static final String REQUEST_TEAM_INFO = bundle.getString("REQUEST_TEAM_INFO");
+    public static final String CONFIRM_TEAM_NAME = bundle.getString("CONFIRM_TEAM_NAME");
+    public static final String CONFIRM_ANSWER = bundle.getString("CONFIRM_ANSWER");
+    public static final String QUESTIONS_START = bundle.getString("QUESTIONS_START");
+    public static final String ENDING_MESSAGE = bundle.getString("ENDING_MESSAGE");
+    public static final String LINE = bundle.getString("LINE");
 
 }

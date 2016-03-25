@@ -18,6 +18,7 @@ public class Main {
 
         Main main = new Main();
         System.out.println(START_HEADER_MESSAGE);
+        System.out.println(VERSION_INFO);
         main.start(getQuestions());
 
     }

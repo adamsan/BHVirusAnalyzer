@@ -25,7 +25,7 @@ public class Main {
 
     private static List<Question> getQuestions() {
         // TODO: maybe reading questions from webservice instead of file?
-        String fileName = "/questions.data";
+        String fileName = "/resources/questions.data";
         try (BufferedReader r = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream(fileName), "utf-8"))) {
             List<Question> questions = r.lines()
                     .map(Question::createFromLine)

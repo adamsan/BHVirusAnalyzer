@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 public class Messages {
 
 
-    public static final ResourceBundle bundle = ResourceBundle.getBundle("messages");
+    public static final ResourceBundle bundle = ResourceBundle.getBundle("resources/messages");
 
     public static final String START_HEADER_MESSAGE = "" +
             "  ____  _       _    _                        _  __      ___                                       _                    \r\n" +

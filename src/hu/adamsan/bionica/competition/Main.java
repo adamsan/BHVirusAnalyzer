@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import hu.adamsan.bionica.competition.model.Question;
+import hu.adamsan.bionica.competition.model.SubmissionData;
 
 // Since converting to manven project, eclipse can't properly export to jar,
 // it put's the bundle properties file and the questions file in the wrong place
@@ -19,12 +20,15 @@ import hu.adamsan.bionica.competition.model.Question;
 public class Main {
     private Scanner sc = null;
     private String teamName = null;
+    private NetworkCommunicator communicator;
+    private SubmissionData submissionData;
 
     public static void main(String[] args) {
 
         Main main = new Main();
         System.out.println(START_HEADER_MESSAGE);
         System.out.println(VERSION_INFO);
+        main.communicator = new NetworkCommunicator();
         main.start(getQuestions());
 
     }
@@ -48,6 +52,7 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             sc = scanner;
             teamName = getTeamInformation();
+            submissionData = new SubmissionData(teamName, teamName);
             System.out.println(LINE);
             System.out.println(QUESTIONS_START);
             System.out.println(LINE);
@@ -67,19 +72,24 @@ public class Main {
                 score += question.evaluateAnswer(response);
             }
         }
+        submissionData.setScore(score);
         System.out.println(ENDING_MESSAGE);
-        submitScore(score);
+        submitScore();
     }
 
     private void submitResponse(Question question, String response) {
         // TODO Auto-generated method stub
     }
 
-    private void submitScore(int score) {
-        System.out.println(String.format(END_SCORE_MESSAGE, score));
+    private void submitScore() {
+        System.out.println(String.format(END_SCORE_MESSAGE, submissionData.getScore()));
         System.out.println(LINE);
+        
+        communicator.submitScore(submissionData);
 
         // TODO: actually submit score to server. Implement it when server is ready.
+        // server will be at: https://bionika-competition-results.herokuapp.com/
+        // https://bionika-competition-results.herokuapp.com/addResult?teamName=TestTeam&teamCode=TT01&score=23&startSubmitTime=2016-03-26%2018:43:22
     }
 
     private String readResponse() {

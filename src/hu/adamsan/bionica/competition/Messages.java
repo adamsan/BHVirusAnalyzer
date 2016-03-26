@@ -24,5 +24,6 @@ public class Messages {
     public static final String QUESTIONS_START = bundle.getString("QUESTIONS_START");
     public static final String ENDING_MESSAGE = bundle.getString("ENDING_MESSAGE");
     public static final String LINE = bundle.getString("LINE");
+    public static final String END_SCORE_MESSAGE = bundle.getString("END_SCORE_MESSAGE");
 
 }

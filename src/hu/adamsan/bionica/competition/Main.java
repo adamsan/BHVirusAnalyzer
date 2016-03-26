@@ -76,8 +76,8 @@ public class Main {
     }
 
     private void submitScore(int score) {
+        System.out.println(String.format(END_SCORE_MESSAGE, score));
         System.out.println(LINE);
-        System.out.println("\nA '" + teamName + "' csapat pontszáma : " + score);
 
         // TODO: actually submit score to server. Implement it when server is ready.
     }

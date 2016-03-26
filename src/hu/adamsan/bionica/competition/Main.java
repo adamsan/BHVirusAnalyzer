@@ -10,6 +10,12 @@ import java.util.stream.Collectors;
 
 import hu.adamsan.bionica.competition.model.Question;
 
+// Since converting to manven project, eclipse can't properly export to jar,
+// it put's the bundle properties file and the questions file in the wrong place
+// to compile to jar:
+// mvn clean compile assembly:single
+// to run jar:
+// java -jar target\BHVirusAnalyzer-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 public class Main {
     private Scanner sc = null;
     private String teamName = null;
@@ -25,7 +31,7 @@ public class Main {
 
     private static List<Question> getQuestions() {
         // TODO: maybe reading questions from webservice instead of file?
-        String fileName = "/resources/questions.data";
+        String fileName = "/questions.data";
         try (BufferedReader r = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream(fileName), "utf-8"))) {
             List<Question> questions = r.lines()
                     .map(Question::createFromLine)

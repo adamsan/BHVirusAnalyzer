@@ -1,43 +1,44 @@
 package hu.adamsan.bionica.competition;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import hu.adamsan.bionica.competition.model.SubmissionData;
+import hu.adamsan.bionica.competition.utils.FileUtils;
 
 public class NetworkCommunicator {
-    private String serverURL = "http://localhost:8080/BHVirusAnalyzerServer/addResult";
+    private String baseURL = "http://localhost:8080/BHVirusAnalyzerServer";
 
     // goal: http://localhost:8080/BHVirusAnalyzerServer/addResult?teamName=TestTeam&teamCode=TT01&score=23&startSubmitTime=2016-03-26 18:43:22
     public void submitScore(SubmissionData submissionData) {
         URI uri = null;
-        try {
-            uri = buildURI(serverURL, submissionData);
-        } catch (URISyntaxException e1) {
-            e1.printStackTrace();
-        }
-
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpUriRequest request = new HttpGet(uri);
-        try {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            uri = buildURI(baseURL + "/addResult", submissionData);
+            HttpUriRequest request = new HttpGet(uri);
             client.execute(request);
-        } catch (IOException e) {
+        } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    private URI buildURI(String serverUrl, SubmissionData submissionData) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder(serverURL);
+    private URI buildURI(String url, SubmissionData submissionData) throws URISyntaxException {
+        URIBuilder uriBuilder = new URIBuilder(url);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
         uriBuilder.addParameter("teamName", submissionData.getTeamName());
         uriBuilder.addParameter("teamCode", submissionData.getTeamCode());
@@ -46,4 +47,45 @@ public class NetworkCommunicator {
         return uriBuilder.build();
     }
 
+    public void findServer() {
+        List<String> servers = getServers();
+        for (String server : servers) {
+            if (isAlive(server)) {
+                baseURL = server;
+                System.out.println("Server found...." + baseURL);
+                return;
+            }
+        }
+        System.out.println("Server not found.");
+    }
+
+    private boolean isAlive(String server) {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            URI uri = new URIBuilder(server + "/AppInfo").addParameter("isAlive", "isAlive").build();
+            System.out.println(uri);
+            HttpGet request = new HttpGet(uri);
+            try (CloseableHttpResponse response = client.execute(request);) {
+                System.out.println(response.getStatusLine().getStatusCode());
+                if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                    return false;
+                }
+                HttpEntity entity = response.getEntity();
+                System.out.println(entity);
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"));) {
+                    String line = br.readLine();
+                    System.out.println(">>");
+                    if ("ALIVE".equals(line)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (URISyntaxException | IOException e) {
+            // e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static List<String> getServers() {
+        return FileUtils.readFromResource("/servers.data");
+    }
 }

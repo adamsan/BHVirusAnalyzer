@@ -2,14 +2,14 @@ package hu.adamsan.bionica.competition;
 
 import static hu.adamsan.bionica.competition.Messages.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import hu.adamsan.bionica.competition.model.Question;
 import hu.adamsan.bionica.competition.model.SubmissionData;
+import hu.adamsan.bionica.competition.utils.FileUtils;
 
 // Since converting to manven project, eclipse can't properly export to jar,
 // it put's the bundle properties file and the questions file in the wrong place
@@ -26,6 +26,7 @@ public class Main {
     public static void main(String[] args) {
 
         Main main = new Main();
+        System.out.println(Arrays.toString(args));
         System.out.println(START_HEADER_MESSAGE);
         System.out.println(VERSION_INFO);
         main.communicator = new NetworkCommunicator();
@@ -36,18 +37,14 @@ public class Main {
     private static List<Question> getQuestions() {
         // TODO: maybe reading questions from webservice instead of file?
         String fileName = "/questions.data";
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream(fileName), "utf-8"))) {
-            List<Question> questions = r.lines()
-                    .map(Question::createFromLine)
-                    .collect(Collectors.toList());
-            return questions;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        throw new RuntimeException("Error occured while reading questions.");
+        List<Question> questions = FileUtils.readFromResource(fileName).stream()
+                .map(Question::createFromLine)
+                .collect(Collectors.toList());
+        return questions;
     }
 
     private void start(List<Question> questions) {
+        communicator.findServer();
         int score = 0;
         try (Scanner scanner = new Scanner(System.in)) {
             sc = scanner;

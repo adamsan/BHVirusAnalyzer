@@ -42,7 +42,7 @@ public class NetworkCommunicator {
 
     private URI buildURI(String url, SubmissionData submissionData) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder(url);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         uriBuilder.addParameter("teamName", submissionData.getTeamName());
         uriBuilder.addParameter("teamCode", submissionData.getTeamCode());
         uriBuilder.addParameter("score", "" + submissionData.getScore());

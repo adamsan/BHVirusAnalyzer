@@ -1,8 +1,8 @@
 package hu.adamsan.bionica.competition;
 
 import static hu.adamsan.bionica.competition.Messages.*;
+import static hu.adamsan.bionica.competition.utils.ConsoleUtils.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -26,9 +26,8 @@ public class Main {
     public static void main(String[] args) {
 
         Main main = new Main();
-        System.out.println(Arrays.toString(args));
-        System.out.println(START_HEADER_MESSAGE);
-        System.out.println(VERSION_INFO);
+        printlnSlow(START_HEADER_MESSAGE);
+        printlnSlow(VERSION_INFO + "\n");
         main.communicator = new NetworkCommunicator();
         main.start(getQuestions());
 
@@ -50,9 +49,9 @@ public class Main {
             sc = scanner;
             teamName = getTeamInformation();
             submissionData = new SubmissionData(teamName, teamName);
-            System.out.println(LINE);
-            System.out.println(QUESTIONS_START);
-            System.out.println(LINE);
+            printlnSlow(LINE);
+            printlnSlow(QUESTIONS_START);
+            printlnSlow(LINE);
             int count = 1;
             for (Question question : questions) {
                 String response = null;
@@ -63,14 +62,14 @@ public class Main {
                         response = null;
                     }
                 }
-                System.out.println(LINE);
+                printlnSlow(LINE);
                 submitResponse(question, response);
                 count++;
                 score += question.evaluateAnswer(response);
             }
         }
         submissionData.setScore(score);
-        System.out.println(ENDING_MESSAGE);
+        printlnSlow(ENDING_MESSAGE);
         submitScore();
     }
 
@@ -79,9 +78,9 @@ public class Main {
     }
 
     private void submitScore() {
-        System.out.println(String.format(END_SCORE_MESSAGE, submissionData.getScore()));
-        System.out.println(LINE);
-        
+        printlnSlow(String.format(END_SCORE_MESSAGE, submissionData.getScore()));
+        printlnSlow(LINE);
+
         communicator.submitScore(submissionData);
 
         // TODO: actually submit score to server. Implement it when server is ready.
@@ -100,7 +99,7 @@ public class Main {
     private String getTeamInformation() {
         String teamName = null;
         while (teamName == null) {
-            System.out.println(REQUEST_TEAM_INFO);
+            printlnSlow(REQUEST_TEAM_INFO);
             if (sc.hasNextLine()) {
                 teamName = sc.nextLine();
                 if (teamName.length() == 0) {
@@ -116,7 +115,7 @@ public class Main {
     }
 
     private boolean confirm(String message) {
-        System.out.println(message + " (Y/N)");
+        printlnSlow(message + " (Y/N)");
         if (sc.hasNextLine()) {
             String response = sc.nextLine();
             return response.toUpperCase().equals("Y");
@@ -125,8 +124,8 @@ public class Main {
     }
 
     private void ask(Question question, int questionCount) {
-        System.out.println("Kérdés [" + questionCount + "]");
-        System.out.println(question.getQuestion());
+        printlnSlow("Kérdés [" + questionCount + "]");
+        printlnSlow(question.getQuestion());
     }
 
 }

@@ -1,5 +1,8 @@
 package hu.adamsan.bionica.competition;
 
+import static hu.adamsan.bionica.competition.Messages.*;
+import static hu.adamsan.bionica.competition.utils.ConsoleUtils.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,14 +52,15 @@ public class NetworkCommunicator {
 
     public void findServer() {
         List<String> servers = getServers();
+        printlnSlow(SERVER_SEARCH);
         for (String server : servers) {
             if (isAlive(server)) {
                 baseURL = server;
-                System.out.println("Server found...." + baseURL);
+                printlnSlow(SERVER_FOUND);
                 return;
             }
         }
-        System.out.println("Server not found.");
+        printlnSlow(SERVER_NOT_FOUND);
     }
 
     private boolean isAlive(String server) {
@@ -65,7 +69,6 @@ public class NetworkCommunicator {
             System.out.println(uri);
             HttpGet request = new HttpGet(uri);
             try (CloseableHttpResponse response = client.execute(request);) {
-                System.out.println(response.getStatusLine().getStatusCode());
                 if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                     return false;
                 }
@@ -73,7 +76,6 @@ public class NetworkCommunicator {
                 System.out.println(entity);
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"));) {
                     String line = br.readLine();
-                    System.out.println(">>");
                     if ("ALIVE".equals(line)) {
                         return true;
                     }

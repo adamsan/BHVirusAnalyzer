@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -56,7 +56,7 @@ public class NetworkCommunicator {
         for (String server : servers) {
             if (isAlive(server)) {
                 baseURL = server;
-                printlnSlow(SERVER_FOUND);
+                printlnSlow(SERVER_FOUND + "\n");
                 return;
             }
         }
@@ -66,23 +66,27 @@ public class NetworkCommunicator {
     private boolean isAlive(String server) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             URI uri = new URIBuilder(server + "/AppInfo").addParameter("isAlive", "isAlive").build();
-            System.out.println(uri);
             HttpGet request = new HttpGet(uri);
             try (CloseableHttpResponse response = client.execute(request);) {
                 if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                     return false;
                 }
-                HttpEntity entity = response.getEntity();
-                System.out.println(entity);
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"));) {
-                    String line = br.readLine();
-                    if ("ALIVE".equals(line)) {
-                        return true;
-                    }
+                if (checkIfResponseFirstLineMatch(response, "ALIVE")) {
+                    return true;
                 }
             }
         } catch (URISyntaxException | IOException e) {
-            // e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean checkIfResponseFirstLineMatch(HttpResponse response, String target) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));) {
+            String line = br.readLine();
+            if (target.equals(line)) {
+                return true;
+            }
+        } catch (IOException e) {
         }
         return false;
     }

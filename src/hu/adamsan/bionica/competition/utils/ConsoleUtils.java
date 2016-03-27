@@ -4,8 +4,7 @@ public class ConsoleUtils {
     public static void printlnSlow(String str) {
         int waitingTimeMS = calculateSpeed(str.length());
         for (int i = 0; i < str.length(); i++) {
-            Character ch = str.charAt(i);
-            System.out.print(ch);
+            System.out.print(str.charAt(i));
             waitIfNotTheSameAsPreviousChar(str, i, i - 1, waitingTimeMS);
         }
         System.out.println();

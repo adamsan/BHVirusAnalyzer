@@ -19,6 +19,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -35,6 +36,8 @@ public class NetworkCommunicator {
             uri = buildURI(baseURL + "/addResult", submissionData);
             HttpUriRequest request = new HttpGet(uri);
             client.execute(request);
+        } catch (HttpHostConnectException ex) {
+            // If server is running, no need to alert the students.
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }

@@ -14,7 +14,7 @@ public class Question {
     }
 
     public static Question createFromLine(String line) {
-        String[] split = line.split(",");
+        String[] split = line.split("##");
         return new Question(split[0], split[1], Integer.parseInt(split[2]));
     }
 

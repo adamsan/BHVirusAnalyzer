@@ -4,6 +4,7 @@ import static hu.adamsan.bionica.competition.Messages.*;
 import static hu.adamsan.bionica.competition.utils.ConsoleUtils.*;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,9 @@ public class Main {
     }
 
     private void submitScore() {
-        printlnSlow(String.format(END_SCORE_MESSAGE, submissionData.getScore()));
+        Random random = new Random();
+        int livesSaved = submissionData.getScore()*10_000 + random.nextInt(5000);
+        printlnSlow(String.format(END_SCORE_MESSAGE, livesSaved));
         printlnSlow(LINE);
 
         communicator.submitScore(submissionData);

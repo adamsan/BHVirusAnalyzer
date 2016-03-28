@@ -124,7 +124,7 @@ public class Main {
     }
 
     private void ask(Question question, int questionCount) {
-        printlnSlow("Kérdés [" + questionCount + "]");
+        printlnSlow(String.format(QUESTION_NUMBER, questionCount));
         printlnSlow(question.getQuestion());
     }
 

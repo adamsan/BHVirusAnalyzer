@@ -28,5 +28,6 @@ public class Messages {
     public static final String SERVER_FOUND = bundle.getString("SERVER_FOUND");
     public static final String SERVER_NOT_FOUND = bundle.getString("SERVER_NOT_FOUND");
     public static final String SERVER_SEARCH = bundle.getString("SERVER_SEARCH");
+    public static final String QUESTION_NUMBER = bundle.getString("QUESTION_NUMBER");
 
 }

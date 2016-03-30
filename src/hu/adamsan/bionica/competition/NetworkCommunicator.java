@@ -10,18 +10,22 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 
 import hu.adamsan.bionica.competition.model.SubmissionData;
 import hu.adamsan.bionica.competition.utils.FileUtils;
@@ -33,24 +37,21 @@ public class NetworkCommunicator {
     public void submitScore(SubmissionData submissionData) {
         URI uri = null;
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            uri = buildURI(baseURL + "/addResult", submissionData);
-            HttpUriRequest request = new HttpGet(uri);
-            client.execute(request);
+            HttpPost post = new HttpPost(baseURL + "/addResult");
+            List<NameValuePair> data = new ArrayList<>();
+            data.add(new BasicNameValuePair("teamName", submissionData.getTeamName()));
+            data.add(new BasicNameValuePair("teamCode", submissionData.getTeamCode()));
+            data.add(new BasicNameValuePair("score", "" + submissionData.getScore()));
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            data.add(new BasicNameValuePair("startSubmitTime", "" + df.format(submissionData.getStartSubmitTime())));
+            post.setEntity(new UrlEncodedFormEntity(data));
+            client.execute(post);
+
         } catch (HttpHostConnectException ex) {
             // If server is running, no need to alert the students.
-        } catch (URISyntaxException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private URI buildURI(String url, SubmissionData submissionData) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder(url);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        uriBuilder.addParameter("teamName", submissionData.getTeamName());
-        uriBuilder.addParameter("teamCode", submissionData.getTeamCode());
-        uriBuilder.addParameter("score", "" + submissionData.getScore());
-        uriBuilder.addParameter("startSubmitTime", "" + df.format(submissionData.getStartSubmitTime()));
-        return uriBuilder.build();
     }
 
     public void findServer() {

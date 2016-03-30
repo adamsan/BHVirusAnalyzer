@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import hu.adamsan.bionica.competition.model.GivenAnswer;
 import hu.adamsan.bionica.competition.model.Question;
 import hu.adamsan.bionica.competition.model.SubmissionData;
 import hu.adamsan.bionica.competition.utils.FileUtils;
@@ -65,6 +66,9 @@ public class Main {
                 }
                 printlnSlow(LINE);
                 submitResponse(question, response);
+
+                submissionData.getGivenAnswers().add(new GivenAnswer(count, question, response));
+
                 count++;
                 score += question.evaluateAnswer(response);
             }
@@ -84,6 +88,7 @@ public class Main {
         printlnSlow(String.format(END_SCORE_MESSAGE, livesSaved));
         printlnSlow(LINE);
 
+        System.out.println(submissionData);
         communicator.submitScore(submissionData);
 
         // TODO: actually submit score to server. Implement it when server is ready.

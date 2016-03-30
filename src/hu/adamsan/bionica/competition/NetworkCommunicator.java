@@ -27,6 +27,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import hu.adamsan.bionica.competition.model.SubmissionData;
 import hu.adamsan.bionica.competition.utils.FileUtils;
 
@@ -38,12 +41,7 @@ public class NetworkCommunicator {
         URI uri = null;
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(baseURL + "/addResult");
-            List<NameValuePair> data = new ArrayList<>();
-            data.add(new BasicNameValuePair("teamName", submissionData.getTeamName()));
-            data.add(new BasicNameValuePair("teamCode", submissionData.getTeamCode()));
-            data.add(new BasicNameValuePair("score", "" + submissionData.getScore()));
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-            data.add(new BasicNameValuePair("startSubmitTime", "" + df.format(submissionData.getStartSubmitTime())));
+            List<NameValuePair> data = prepareNamedValuePairList(submissionData);
             post.setEntity(new UrlEncodedFormEntity(data));
             client.execute(post);
 
@@ -52,6 +50,23 @@ public class NetworkCommunicator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<NameValuePair> prepareNamedValuePairList(SubmissionData submissionData) {
+
+        List<NameValuePair> data = new ArrayList<>();
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            mapper.setDateFormat(df);
+            String asString = mapper.writeValueAsString(submissionData);
+            data.add(new BasicNameValuePair("json", asString));
+            System.out.println(asString);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
     public void findServer() {

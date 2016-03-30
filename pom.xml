@@ -69,8 +69,8 @@
 							<outputDirectory>target</outputDirectory>
 							<resources>
 								<resource>
-								<directory>batch</directory>
-								<filtering>true</filtering>
+									<directory>batch</directory>
+									<filtering>true</filtering>
 								</resource>
 							</resources>
 						</configuration>
@@ -89,6 +89,11 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.7.3</version>
 		</dependency>
 	</dependencies>
 </project>

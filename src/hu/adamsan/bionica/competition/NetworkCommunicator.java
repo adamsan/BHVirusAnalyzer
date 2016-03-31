@@ -62,7 +62,6 @@ public class NetworkCommunicator {
             mapper.setDateFormat(df);
             String asString = mapper.writeValueAsString(submissionData);
             data.add(new BasicNameValuePair("json", asString));
-            System.out.println(asString);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

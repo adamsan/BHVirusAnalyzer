@@ -65,7 +65,6 @@ public class Main {
                     }
                 }
                 printlnSlow(LINE);
-                submitResponse(question, response);
 
                 submissionData.getGivenAnswers().add(new GivenAnswer(count, question, response));
 
@@ -78,9 +77,6 @@ public class Main {
         submitScore();
     }
 
-    private void submitResponse(Question question, String response) {
-        // TODO Auto-generated method stub
-    }
 
     private void submitScore() {
         Random random = new Random();
@@ -88,7 +84,6 @@ public class Main {
         printlnSlow(String.format(END_SCORE_MESSAGE, livesSaved));
         printlnSlow(LINE);
 
-        System.out.println(submissionData);
         communicator.submitScore(submissionData);
 
         // TODO: actually submit score to server. Implement it when server is ready.

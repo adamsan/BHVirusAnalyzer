@@ -38,7 +38,6 @@ public class NetworkCommunicator {
 
     // goal: http://localhost:8080/BHVirusAnalyzerServer/addResult?teamName=TestTeam&teamCode=TT01&score=23&startSubmitTime=2016-03-26 18:43:22
     public void submitScore(SubmissionData submissionData) {
-        URI uri = null;
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(baseURL + "/addResult");
             List<NameValuePair> data = prepareNamedValuePairList(submissionData);
@@ -68,8 +67,11 @@ public class NetworkCommunicator {
         return data;
     }
 
-    public void findServer() {
+    public void findServer(Options options) {
         List<String> servers = getServers();
+        if (options != null && options.getServer() != null) {
+            servers.add(0, options.getServer());
+        }
         printlnSlow(SERVER_SEARCH);
         for (String server : servers) {
             if (isAlive(server)) {

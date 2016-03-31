@@ -19,7 +19,7 @@ public class CommunicationWithServerTest {
     @Before
     public void setUpBefore() throws Exception {
         networkCommunicator = new NetworkCommunicator();
-        networkCommunicator.findServer();
+        networkCommunicator.findServer(null);
         submissionData = new SubmissionData[3];
         submissionData[0] = new SubmissionData("Best Test team", "BTT001");
         submissionData[0].setScore(4);

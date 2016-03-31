@@ -24,10 +24,12 @@ public class Main {
     private String teamName = null;
     private NetworkCommunicator communicator;
     private SubmissionData submissionData;
+    private Options options = new Options();
 
     public static void main(String[] args) {
 
         Main main = new Main();
+        main.options.process(args);
         printlnSlow(START_HEADER_MESSAGE);
         printlnSlow(VERSION_INFO + "\n");
         main.communicator = new NetworkCommunicator();
@@ -45,7 +47,7 @@ public class Main {
     }
 
     private void start(List<Question> questions) {
-        communicator.findServer();
+        communicator.findServer(options);
         int score = 0;
         try (Scanner scanner = new Scanner(System.in)) {
             sc = scanner;
